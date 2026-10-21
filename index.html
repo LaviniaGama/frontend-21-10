@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header role="banner" class="hg-primary text-white text-center">
+        <h1\@>Techfleet Terminal - Mapeamento 80 </h1>
+        <p class=""></p>
+    </header>
+
+    <main role="main" class="container">
+        <div class="row g-4">
+            <section class="col-md-5">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white front-weight-bold">
+                        Selevione o tipo de mapeamento            
+                    </div>
+                    <div class="card-body">
+                        <form id="from-veiculos">
+                            <div class="mb-3">
+                                <label for="placa" class="form-label">Placa</label>
+                                <input type="text" id="placa" name="placa" class="form-control min-44" placeholder="Ex: ABC-1234" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="modelo" class="form-label">Modelo</label>
+                                <input type="text" id="modelo" name="modelo" class="form-control" placeholder="Ex: Gol" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label">categoria</label>
+                                <select type="text" class="form-select min-44" required>
+                                    <option value="">transporte de carga</option>
+                                    <option value="1">manutenção tecnica</option>
+                                    <option value="2">inspeção de campo</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <button type="submit" class="btn btn-primary">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section class="col-md-7">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white front-weight-bold">
+                        <span>Frota ativa de veiculos</span>
+                        <span id="contato-frota" class="badge bg wearing text-dark"></span>
+                    </div>
+                    <div class="card-body">
+                        <div id="container-veiculos" class="row g-3">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>>
