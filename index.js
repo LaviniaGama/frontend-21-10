@@ -1,5 +1,13 @@
 //criar classe modelo
 class Veiculo{
+    constructor(id, placa, modelo, categoria, emServico){
+        this.placa=placa.toUpperCase();
+        this.modelo=modelo;
+        this.categoria=categoria;
+        this.emServico=emServico;
+         this.id= Date.now() + math.random();
+    }
+
     //Função interna: Retornar o UI em HTML do objeto
     renderizarHTML(){
         const badgeCor = this.emServico ? 'bg-success' : 'bg-danger';
