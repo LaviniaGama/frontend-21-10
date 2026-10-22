@@ -1,33 +1,40 @@
-class Veiculo {
-    constructor(id, placa, modelo, categoria, emServico = true) {
+class OrdemServico {
+    constructor(id, cliente, equipamento, descricao, valorEstimado, concluida = false) {
         this.id = id ?? Date.now() + Math.random();
-        this.placa = placa.toUpperCase();
-        this.modelo = modelo;
-        this.categoria = categoria;
-        this.emServico = emServico;
+        this.cliente = cliente;
+        this.equipamento = equipamento;
+        this.descricao = descricao;
+        this.valorEstimado = Number(valorEstimado) || 0;
+        this.concluida = concluida;
     }
 
-    alternarStatus() {
-        this.emServico = !this.emServico;
+    concluirOS() {
+        this.concluida = true;
     }
 
-    renderizarHTML() {
-        const badgeCor = this.emServico ? 'bg-success' : 'bg-danger';
-        const statusTexto = this.emServico ? 'Em Operação' : 'Em Manutenção';
-        const btnTexto = this.emServico ? 'Enviar p/ Manutenção' : 'Reativar Veículo';
+    gerarTemplate() {
+        const statusTexto = this.concluida ? 'Concluída' : 'Em Aberto';
+        const badgeCor = this.concluida ? 'bg-success' : 'bg-danger';
+        const botaoTexto = this.concluida ? 'OS Finalizada' : 'Concluir OS';
 
         return `
             <div class="col-12">
-                <div class="card border-start border-4 ${this.emServico ? 'border-success' : 'border-danger'} shadow-sm">
-                    <div class="card-body d-flex justify-content-between align-items-center gap-3">
+                <div class="card border-start border-4 ${this.concluida ? 'border-success' : 'border-danger'} shadow-sm">
+                    <div class="card-body d-flex justify-content-between align-items-start gap-3">
                         <div>
-                            <h5 class="card-title mb-1">${this.modelo} <small class="text-muted">(${this.placa})</small></h5>
-                            <p class="card-text mb-0 small text-secondary">Categoria: ${this.categoria}</p>
-                            <span class="badge ${badgeCor} mt-2">${statusTexto}</span>
+                            <h5 class="card-title mb-2">${this.cliente}</h5>
+                            <p class="card-text mb-1"><strong>Equipamento:</strong> ${this.equipamento}</p>
+                            <p class="card-text mb-1"><strong>Descrição:</strong> ${this.descricao}</p>
+                            <p class="card-text mb-2"><strong>Valor estimado:</strong> R$ ${this.valorEstimado.toFixed(2)}</p>
+                            <span class="badge ${badgeCor}">${statusTexto}</span>
                         </div>
                         <div>
-                            <button onclick="gerenciador.mudarStatusVeiculo(${this.id})" class="btn btn-outline-dark btn-sm min-w-44">
-                                ${btnTexto}
+                            <button
+                                class="btn btn-outline-dark btn-sm min-44"
+                                onclick="gerenciador.concluirOS(${this.id})"
+                                ${this.concluida ? 'disabled' : ''}
+                            >
+                                ${botaoTexto}
                             </button>
                         </div>
                     </div>
@@ -37,12 +44,12 @@ class Veiculo {
     }
 }
 
-class GerenciadorFrota {
+class GerenciadorOS {
     constructor() {
-        this.frota = [];
-        this.conteinerDOM = document.getElementById('container-veiculos');
-        this.contadorDOM = document.getElementById('contato-frota');
-        this.formularioDOM = document.getElementById('form-veiculos');
+        this.ordens = [];
+        this.formularioDOM = document.getElementById('form-os');
+        this.containerDOM = document.getElementById('container-os');
+        this.contadorDOM = document.getElementById('contador-os');
     }
 
     iniciar() {
@@ -56,87 +63,90 @@ class GerenciadorFrota {
 
         this.formularioDOM.addEventListener('submit', (event) => {
             event.preventDefault();
-            this.adicionarVeiculo();
+            this.adicionarOrdem();
         });
     }
 
-    adicionarVeiculo() {
-        const placa = document.getElementById('placa')?.value.trim();
-        const modelo = document.getElementById('modelo')?.value.trim();
-        const categoria = document.getElementById('categoria')?.value;
+    adicionarOrdem() {
+        const cliente = document.getElementById('cliente')?.value.trim();
+        const equipamento = document.getElementById('equipamento')?.value.trim();
+        const descricao = document.getElementById('descricao')?.value.trim();
+        const valorEstimado = document.getElementById('valor-estimado')?.value.trim();
 
-        if (!placa || !modelo || !categoria) return;
+        if (!cliente || !equipamento || !descricao || !valorEstimado) return;
 
-        const novoVeiculo = new Veiculo(
+        const novaOrdem = new OrdemServico(
             Date.now() + Math.random(),
-            placa,
-            modelo,
-            categoria,
-            true
+            cliente,
+            equipamento,
+            descricao,
+            valorEstimado,
+            false
         );
 
-        this.frota.push(novoVeiculo);
+        this.ordens.push(novaOrdem);
         this.salvarStorage();
         this.atualizarTela();
         this.formularioDOM.reset();
     }
 
-    mudarStatusVeiculo(id) {
-        const veiculoEncontrado = this.frota.find((veiculo) => Number(veiculo.id) === Number(id));
+    concluirOS(id) {
+        const ordemEncontrada = this.ordens.find((ordem) => Number(ordem.id) === Number(id));
 
-        if (!veiculoEncontrado) return;
+        if (!ordemEncontrada) return;
 
-        veiculoEncontrado.alternarStatus();
+        ordemEncontrada.concluirOS();
         this.salvarStorage();
         this.atualizarTela();
     }
 
     atualizarTela() {
-        if (!this.conteinerDOM) return;
+        if (!this.containerDOM) return;
 
-        this.conteinerDOM.innerHTML = '';
+        this.containerDOM.innerHTML = '';
 
-        if (this.frota.length === 0) {
-            this.conteinerDOM.innerHTML = `
-                <div class="alert alert-info text-center w-100">Nenhum veículo cadastrado.</div>
+        if (this.ordens.length === 0) {
+            this.containerDOM.innerHTML = `
+                <div class="alert alert-info text-center w-100">Nenhuma ordem de serviço cadastrada.</div>
             `;
         } else {
-            this.frota.forEach((veiculo) => {
-                this.conteinerDOM.insertAdjacentHTML('beforeend', veiculo.renderizarHTML());
+            this.ordens.forEach((ordem) => {
+                this.containerDOM.insertAdjacentHTML('beforeend', ordem.gerarTemplate());
             });
         }
 
         if (this.contadorDOM) {
-            this.contadorDOM.textContent = `${this.frota.length} veículos`;
+            this.contadorDOM.textContent = `${this.ordens.length} OS`;
         }
     }
 
     salvarStorage() {
-        localStorage.setItem('TachFleet', JSON.stringify(this.frota));
+        localStorage.setItem('techfix_ordens', JSON.stringify(this.ordens));
     }
 
     carregarStorage() {
-        const dados = localStorage.getItem('TachFleet');
+        const dados = localStorage.getItem('techfix_ordens');
 
         if (!dados) return;
 
         try {
-            const objetosPuros = JSON.parse(dados);
-            this.frota = objetosPuros.map((item) => new Veiculo(
+            const dadosBrutos = JSON.parse(dados);
+            this.ordens = dadosBrutos.map((item) => new OrdemServico(
                 item.id,
-                item.placa,
-                item.modelo,
-                item.categoria,
-                item.emServico
+                item.cliente,
+                item.equipamento,
+                item.descricao,
+                item.valorEstimado,
+                item.concluida
             ));
         } catch (erro) {
             console.warn('Dados inválidos no localStorage:', erro);
-            localStorage.removeItem('TachFleet');
+            localStorage.removeItem('techfix_ordens');
         }
     }
 }
 
-const gerenciador = new GerenciadorFrota();
+const gerenciador = new GerenciadorOS();
 window.gerenciador = gerenciador;
 
 document.addEventListener('DOMContentLoaded', () => {
