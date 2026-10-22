@@ -9,7 +9,7 @@
 <body>
 
     <header role="banner" class="hg-primary text-white text-center">
-        <h1\@>Techfleet Terminal - Mapeamento 80 </h1>
+        <h1>Techfleet Terminal - Mapeamento 80</h1>
         <p class=""></p>
     </header>
 
@@ -18,10 +18,10 @@
             <section class="col-md-5">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-primary text-white front-weight-bold">
-                        Selevione o tipo de mapeamento            
+                        Selecione o tipo de mapeamento
                     </div>
                     <div class="card-body">
-                        <form id="from-veiculos">
+                        <form id="form-veiculos">
                             <div class="mb-3">
                                 <label for="placa" class="form-label">Placa</label>
                                 <input type="text" id="placa" name="placa" class="form-control min-44" placeholder="Ex: ABC-1234" required>
@@ -33,11 +33,12 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="categoria" class="form-label">categoria</label>
-                                <select type="text" class="form-select min-44" required>
-                                    <option value="">transporte de carga</option>
-                                    <option value="1">manutenção tecnica</option>
-                                    <option value="2">inspeção de campo</option>
+                                <label for="categoria" class="form-label">Categoria</label>
+                                <select id="categoria" class="form-select min-44" required>
+                                    <option value="">Selecione</option>
+                                    <option value="Transporte de carga">Transporte de carga</option>
+                                    <option value="Manutenção técnica">Manutenção técnica</option>
+                                    <option value="Inspeção de campo">Inspeção de campo</option>
                                 </select>
                             </div>
                             
@@ -52,8 +53,8 @@
             <section class="col-md-7">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-primary text-white front-weight-bold">
-                        <span>Frota ativa de veiculos</span>
-                        <span id="contato-frota" class="badge bg wearing text-dark"></span>
+                        <span>Frota ativa de veículos</span>
+                        <span id="contato-frota" class="badge bg-light text-dark"></span>
                     </div>
                     <div class="card-body">
                         <div id="container-veiculos" class="row g-3">
@@ -64,6 +65,6 @@
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <script src="index.js"></script>
 </body>
-</html>>
+</html>
